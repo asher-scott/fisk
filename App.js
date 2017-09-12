@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
-import { AppLoading, Font } from 'expo';
-
+import { AppLoading, Constants, Location, Font, Permissions } from 'expo';
 
 import { TabNav } from './navigation/NavigationRouters';
 import FeedScreen from './screens/Feed';
@@ -9,6 +8,7 @@ import FeedScreen from './screens/Feed';
 export default class App extends React.Component {
   state = {
     appIsReady: false,
+    location: null,
   };
 
   async componentDidMount() {
@@ -16,6 +16,12 @@ export default class App extends React.Component {
       'gudea': require('./assets/fonts/Gudea-Regular.ttf'),
       'gloria': require('./assets/fonts/GloriaHallelujah.ttf'),
     });
+
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if(status === 'granted') {
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({ location });
+    }
     
 
     this.setState({ appIsReady: true });
@@ -27,14 +33,13 @@ export default class App extends React.Component {
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
           <View style={styles.body}>
-            <TabNav style={{backgroundColor: "#121212"}} />
+            <TabNav screenProps={this.state.location} style={{backgroundColor: "#121212"}} />
           </View>
         </View>
       );
     } else {
       return <AppLoading />
     }
-    
   }
 }
 

@@ -8,33 +8,44 @@ export default class WaypointsScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            region: {
-                latitude: 41.0793,
-                longitude: -85.1394,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            },
+            mapType: "satellite",
             waypoints: [
-                { latitude: 41.0785, longitude: -85.1272 },
-                { latitude: 41.0780, longitude: -75.1278 },
-                { latitude: 41.0770, longitude: -85.1275 },
-                { latitude: 41.0734, longitude: -70.1273 },
-                { latitude: 41.0710, longitude: -76.1243 },
+                { latitude: 41.277314, longitude: -85.506911 },
+                { latitude: 41.275669, longitude: -85.506147 },
+                { latitude: 41.262768, longitude: -85.477973 },
             ],
         };
     }
 
+    renderDebug() {
+        return (
+            <View>
+                <Text>{this.props.screenProps.coords.latitude} {this.props.screenProps.coords.longitude}</Text>
+                <Text>Map Type: {this.state.mapType}</Text>
+            </View>
+        );
+    }
 
     render() {
+        const region = {
+            latitude: this.props.screenProps.coords.latitude,
+            longitude: this.props.screenProps.coords.longitude,
+            latitudeDelta: 0.0030,
+            longitudeDelta: 0.0030,
+        };
+
         const waypoints = this.state.waypoints.map((waypoint, i) => {
             return <MapView.Marker key={i} coordinate={waypoint} />
         })
 
-        console.log(waypoints);
-
         return (
             <View>
-                <MapView initialRegion={this.state.region} height={560}>
+                <MapView 
+                    mapType={this.state.mapType} 
+                    initialRegion={region} 
+                    height={560}
+                    showsUserLocation={true} 
+                    followUserLocation={true}>
                     {waypoints}
                 </MapView>
             </View>
