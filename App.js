@@ -19,11 +19,11 @@ export default class App extends React.Component {
 
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if(status === 'granted') {
-      let location = await Location.getCurrentPositionAsync({});
-      this.setState({ location });
+      let watchPositionHandle = await Location.watchPositionAsync({enableHighAccuracy: true, distanceInterval: 2}, (location) => {
+        this.setState({location});
+      });
     }
     
-
     this.setState({ appIsReady: true });
   }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 import { MapView } from 'expo';
 
@@ -15,6 +15,13 @@ export default class WaypointsScreen extends React.Component {
                 { latitude: 41.262768, longitude: -85.477973 },
             ],
         };
+    }
+
+    dropPin() {
+        this.setState({waypoints: [...this.state.waypoints, {
+            latitude: this.props.screenProps.coords.latitude,
+            longitude: this.props.screenProps.coords.longitude,
+        }]});
     }
 
     renderDebug() {
@@ -43,11 +50,14 @@ export default class WaypointsScreen extends React.Component {
                 <MapView 
                     mapType={this.state.mapType} 
                     initialRegion={region} 
-                    height={560}
+                    height={520}
                     showsUserLocation={true} 
                     followUserLocation={true}>
                     {waypoints}
                 </MapView>
+                <View>
+                    <Button title="Drop a pin" onPress={this.dropPin.bind(this)} />
+                </View>
             </View>
         )
     }
